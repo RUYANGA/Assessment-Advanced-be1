@@ -1,31 +1,29 @@
 from django.contrib.auth import get_user_model
+from rest_framework import serializers
+
+from core.purchases.serializers.purchase_order_utils import approver_approvals_map
+from core.purches.models import Approval
 
 User = get_user_model()
 
 
-def extract_pr_id_from_data(data):
-    if not data:
-        return None
-    for key in ("purchase_request_id", "purchase_request", "id"):
-        val = data.get(key)
-        if isinstance(val, int):
-            return val
+def _get_embedded_approvals(data):
+    """Return approvals list from payload (handles nested 'data')."""
+    approvals = data.get("approvals")
+    if isinstance(approvals, (list, tuple)):
+        return approvals
     nested = data.get("data") if isinstance(data.get("data"), dict) else None
     if nested:
-        for key in ("purchase_request_id", "purchase_request", "id"):
-            val = nested.get(key)
-            if isinstance(val, int):
-                return val
-    return None
+        approvals = nested.get("approvals")
+        if isinstance(approvals, (list, tuple)):
+            return approvals
+    return []
 
 
 def approver_from_embedded(data):
-    approvals = data.get("approvals")
-    if not isinstance(approvals, (list, tuple)):
-        nested = data.get("data") if isinstance(data.get("data"), dict) else None
-        approvals = nested.get("approvals") if nested else None
-        if not isinstance(approvals, (list, tuple)):
-            return None
+    approvals = _get_embedded_approvals(data)
+    if not approvals:
+        return None
 
     # prefer level 2 approved
     by_level2 = [
@@ -45,27 +43,11 @@ def approver_from_embedded(data):
     return User.objects.filter(id=approver_id).first()
 
 
-# --- improved helpers for parsing embedded approvals ---
-
-
-def _get_embedded_approvals(data):
-    """Return approvals list from payload (handles nested 'data')."""
-    approvals = data.get("approvals")
-    if isinstance(approvals, (list, tuple)):
-        return approvals
-    nested = data.get("data") if isinstance(data.get("data"), dict) else None
-    if nested:
-        approvals = nested.get("approvals")
-        if isinstance(approvals, (list, tuple)):
-            return approvals
-    return []
-
-
 def approvers_from_embedded(data):
     """
     Return a list of normalized approval dicts extracted from embedded data.
     Each item: { approver_id:int, level, decision, created_at, comment, user:User|None }
-    This function batch-loads users to avoid N+1 queries.
+    Batch-load users to avoid N+1 queries.
     """
     raw = _get_embedded_approvals(data)
     items = []
@@ -78,15 +60,16 @@ def approvers_from_embedded(data):
             approver_id = None
         if not approver_id:
             continue
-        item = {
-            "approver_id": approver_id,
-            "level": a.get("level"),
-            "decision": a.get("decision"),
-            "created_at": a.get("created_at"),
-            "comment": a.get("comment"),
-            "raw": a,
-        }
-        items.append(item)
+        items.append(
+            {
+                "approver_id": approver_id,
+                "level": a.get("level"),
+                "decision": a.get("decision"),
+                "created_at": a.get("created_at"),
+                "comment": a.get("comment"),
+                "raw": a,
+            }
+        )
         ids.add(approver_id)
 
     users = {u.id: u for u in User.objects.filter(id__in=ids)} if ids else {}
@@ -98,7 +81,7 @@ def approvers_from_embedded(data):
 def approver_approvals_map(data):
     """
     Return dict: approver_id -> list[approval_dict], sorted by created_at descending.
-    Use this to see exactly what each approver approved in the embedded payload.
+    Use this to see what each approver approved in the embedded payload.
     """
     items = approvers_from_embedded(data)
     m = {}
@@ -107,3 +90,56 @@ def approver_approvals_map(data):
     for k, lst in m.items():
         lst.sort(key=lambda x: x.get("created_at") or "", reverse=True)
     return m
+
+
+class MyApprovalSerializer(serializers.ModelSerializer):
+    purchase_request = serializers.SerializerMethodField(read_only=True)
+    my_approvals = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Approval
+        fields = (
+            "id",
+            "purchase_request",
+            "level",
+            "decision",
+            "comment",
+            "created_at",
+            "my_approvals",
+        )
+        read_only_fields = fields
+
+    def get_purchase_request(self, obj):
+        pr = getattr(obj, "purchase_request", None)
+        if not pr:
+            return None
+        return {
+            "id": getattr(pr, "id", None),
+            "status": getattr(pr, "status", None),
+            "required_approvers": getattr(pr, "required_approvers", None),
+            "data": getattr(pr, "data", None),
+        }
+
+    def get_my_approvals(self, obj):
+        """
+        Return the list of approval entries for the current request.user extracted
+        from the embedded purchase_request.data snapshot. This lets approver1 see
+        their approvals even if the PR is still pending approver2.
+        """
+        request = self.context.get("request")
+        if not request or not getattr(obj, "purchase_request", None):
+            return []
+        pr = obj.purchase_request
+        data = getattr(pr, "data", {}) or {}
+        mapping = approver_approvals_map(data) or {}
+        user_entries = mapping.get(request.user.id) or []
+        # normalize to safe dicts (avoid exposing raw payload)
+        return [
+            {
+                "level": it.get("level"),
+                "decision": it.get("decision"),
+                "created_at": it.get("created_at"),
+                "comment": it.get("comment"),
+            }
+            for it in user_entries
+        ]
