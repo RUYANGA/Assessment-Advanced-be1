@@ -5,15 +5,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.purches.models import Approval, PurchaseRequest
-from core.purches.serializers import purchase_request as purchase_request_serializer
+from core.purches.serializers import \
+    purchase_request as purchase_request_serializer
 from core.purches.serializers.approval import MyApprovalSerializer
 
-from .approvals_receipts import (
-    ApprovedReceiptsView,
-    ReceiptDetailView,
-    ReceiptListView,
-    RequestReceiptsView,
-)
+from .approvals_receipts import (ApprovedReceiptsView, ReceiptDetailView,
+                                 ReceiptListView, RequestReceiptsView)
 
 __all__ = [
     "MyApprovedRequestsView",

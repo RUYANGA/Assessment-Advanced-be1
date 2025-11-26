@@ -3,7 +3,8 @@ from rest_framework import serializers
 
 from core.purches.models import Approval, PurchaseOrder
 
-from .purchase_order_utils import approver_from_embedded, extract_pr_id_from_data
+from .purchase_order_utils import (approver_from_embedded,
+                                   extract_pr_id_from_data)
 
 User = get_user_model()
 

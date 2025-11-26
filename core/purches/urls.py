@@ -1,15 +1,13 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from core.purches.views.approvals import (
-    ApprovedReceiptsView,
-    MyApprovedRequestsView,
-    MyRejectedRequestsView,
-    ReceiptDetailView,
-    ReceiptListView,
-    RequestReceiptsView,
-)
-from core.purches.views.purchase_order import PurchaseOrderViewSet  # added import
+from core.purches.views.approvals import (ApprovedReceiptsView,
+                                          MyApprovedRequestsView,
+                                          MyRejectedRequestsView,
+                                          ReceiptDetailView, ReceiptListView,
+                                          RequestReceiptsView)
+from core.purches.views.purchase_order import \
+    PurchaseOrderViewSet  # added import
 from core.purches.views.purchase_request import PurchaseRequestViewSet
 
 router = DefaultRouter()

@@ -11,10 +11,9 @@ from rest_framework.response import Response
 from core.purches import services as prs_services
 from core.purches.models import PurchaseRequest, Receipt
 from core.purches.serializers.purchase_request import (
-    PurchaseRequestDetailSerializer,
-    PurchaseRequestSerializer,
-)
-from core.purches.serializers.receipt import ReceiptSerializer, ReceiptUploadSerializer
+    PurchaseRequestDetailSerializer, PurchaseRequestSerializer)
+from core.purches.serializers.receipt import (ReceiptSerializer,
+                                              ReceiptUploadSerializer)
 from core.purches.utils import user_is_role
 
 logger = logging.getLogger(__name__)
