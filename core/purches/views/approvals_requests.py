@@ -5,8 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.purches.models import Approval, PurchaseRequest
-from core.purches.serializers import \
-    purchase_request as purchase_request_serializer
+from core.purches.serializers import purchase_request as purchase_request_serializer
 
 
 def _build_approver_name(approval):
