@@ -38,7 +38,11 @@ def approver_from_embedded(data):
     ]
     cand = by_level2[0] if by_level2 else None
     if not cand:
-        approved = [a for a in approvals if a.get("decision") == "APPROVED"]
+        approved = [
+            a
+            for a in approvals
+            if a.get("decision") == "APPROVED"
+        ]
         if not approved:
             return None
         approved.sort(key=lambda x: x.get("created_at") or "", reverse=True)
