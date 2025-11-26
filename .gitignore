@@ -1,0 +1,55 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+*.mo
+*.db
+db.sqlite3
+media/
+static/
+staticfiles/
+
+# Sensitive environment files
+.env
+.env.local
+.env.production
+.env.development
+
+# IDE folders
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Migrations (optional: keep if working in a team)
+# Uncomment to ignore migration files:
+# */migrations/*.py
+# */migrations/*.pyc
+
+# pytest / coverage
+.coverage
+htmlcov/
+.coverage.*
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# Gunicorn
+gunicorn.pid

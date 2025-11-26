@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  merci-assessment-backend:
+    build: .
+    image: my-backend:latest
+    container_name: merci-assessment-backend
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "7033:8000"
+    env_file:
+      - .env
+    restart: on-failure
+    pull_policy: never

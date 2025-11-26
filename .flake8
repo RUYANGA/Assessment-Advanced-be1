@@ -1,0 +1,21 @@
+[flake8]
+# match Black's default line length to avoid E501 after formatting
+max-line-length = 88
+
+# Black compatibility
+extend-ignore = E203, W503
+
+# Exclude virtualenv, migrations and common non-source folders
+exclude =
+    .venv,
+    .git,
+    __pycache__,
+    **/migrations/*,
+    node_modules,
+    .venv/*
+
+# Per-file ignores to reduce noise from generated files and settings
+per-file-ignores =
+    **/migrations/*: F401
+    **/__init__.py: F401
+    core/settings.py: E501

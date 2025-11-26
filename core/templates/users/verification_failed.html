@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Verification failed</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --accent:#0b66f6;
+      --danger:#c62828;
+      --muted:#6b7280;
+      --text:#0f1724;
+      --radius:12px;
+      --max:720px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      font-family:Inter, Roboto, Arial, sans-serif;
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      padding:32px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+    }
+    .container{width:100%;max-width:var(--max)}
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow:0 12px 40px rgba(15,23,42,0.06);
+      border:1px solid rgba(15,23,42,0.04);
+    }
+    .status{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+    .dot{width:12px;height:12px;border-radius:50%;background:var(--danger);box-shadow:0 6px 18px rgba(198,40,40,0.12)}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:12px 0 18px;color:var(--muted);line-height:1.5}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+    .btn{
+      display:inline-block;padding:11px 18px;background:var(--accent);color:#fff;text-decoration:none;border-radius:10px;font-weight:600;
+      box-shadow:0 8px 24px rgba(11,102,246,0.12);
+    }
+    .btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(11,102,246,0.10)}
+    .note{margin-top:18px;color:var(--muted);font-size:14px}
+    .small{font-size:13px;color:var(--muted);margin-top:12px}
+    @media (max-width:520px){ .btn{width:100%;text-align:center} .actions{flex-direction:column} }
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <div class="card" role="article" aria-labelledby="vf-heading">
+      <div class="status" aria-hidden="true">
+        <div class="dot"></div>
+        <div style="font-weight:700;color:var(--text)">Email verification</div>
+      </div>
+
+      <h1 id="vf-heading">Verification failed</h1>
+
+      <p class="lead">{{ reason|default:"The verification link is invalid or has expired." }}</p>
+
+      <div class="actions" role="region" aria-label="Actions">
+        {% if resend_url %}
+          <a href="{{ resend_url }}" class="btn">Resend verification email</a>
+        {% endif %}
+        <a href="/" class="btn secondary">Return to home</a>
+        <a href="mailto:support@example.com" class="btn secondary">Contact support</a>
+      </div>
+
+      <p class="note">
+        If you requested a new verification email, allow a few minutes and check your spam folder. For security reasons, verification links expire after a short time.
+      </p>
+
+      <p class="small">If you did not create this account, you can safely ignore this message.</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Confirm your email</title>
+  <style>
+    :root{
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --accent: #0b66f6;
+      --muted: #68707a;
+      --text: #0f1724;
+      --radius: 12px;
+      --max: 720px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      font-family: Inter, Roboto, Arial, Helvetica, sans-serif;
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:32px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+    }
+    .container{width:100%;max-width:var(--max);}
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow:0 10px 30px rgba(15,23,42,0.06);
+      border:1px solid rgba(15,23,42,0.04);
+    }
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    .logo{
+      width:48px;height:48px;border-radius:10px;
+      background:linear-gradient(135deg,#0b66f6 0%,#2aa8ff 100%);
+      display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;
+      box-shadow:0 6px 18px rgba(11,102,246,0.12);
+    }
+    h1{margin:0 0 6px;font-size:20px;}
+    p.lead{margin:0 0 18px;color:var(--muted);line-height:1.5}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    .btn{
+      display:inline-block;padding:12px 18px;background:var(--accent);color:#fff;text-decoration:none;border-radius:10px;font-weight:600;
+      box-shadow:0 8px 24px rgba(11,102,246,0.14);
+    }
+    .alt{display:inline-block;padding:12px 18px;background:transparent;color:var(--accent);text-decoration:none;border-radius:10px;border:1px solid rgba(11,102,246,0.12);font-weight:600}
+    .note{margin-top:16px;color:var(--muted);font-size:14px;line-height:1.5}
+    .link{word-break:break-all;color:var(--accent);text-decoration:none}
+    .footer{margin-top:20px;padding-top:18px;border-top:1px solid #eef2f6;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    @media (max-width:520px){
+      .card{padding:20px}
+      .actions{flex-direction:column}
+      .btn, .alt{width:100%;text-align:center}
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <div class="card" role="article" aria-labelledby="verify-heading">
+      <div class="brand" role="banner" aria-hidden="true">
+        <div class="logo">T</div>
+        <div style="font-weight:700;color:var(--text)">Your Company</div>
+      </div>
+
+      <h1 id="verify-heading">Verify your email to complete registration</h1>
+      <p class="lead">Hi <strong>{{ user_email|default:"there" }}</strong>, thanks for signing up. Click the button below to confirm your email and activate your account.</p>
+
+      <div class="actions" role="region" aria-label="Verification actions">
+        <a href="{{ activation_link }}" class="btn" rel="noopener" target="_blank">Confirm my email</a>
+        <a href="mailto:support@example.com" class="alt">Contact support</a>
+      </div>
+
+      <p class="note">
+        If the button doesn't work, copy & paste this link into your browser:
+      </p>
+      <p class="note"><a class="link" href="{{ activation_link }}" target="_blank" rel="noopener">{{ activation_link }}</a></p>
+
+      <div class="footer" role="contentinfo">
+        <div>Link expires in 24 hours</div>
+        <div>Not you? <a href="mailto:support@example.com" class="link">Report</a></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

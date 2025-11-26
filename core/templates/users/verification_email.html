@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Verify your email</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --accent:#0b66f6;
+      --text:#253043;
+      --muted:#62707a;
+      --radius:12px;
+      --max:680px;
+    }
+    body{
+      margin:0;
+      background:var(--bg);
+      font-family:Inter, Roboto, Arial, sans-serif;
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+    }
+    .wrap{padding:32px 16px;display:flex;justify-content:center;}
+    .container{max-width:var(--max);width:100%;}
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    .logo{
+      width:44px;height:44px;border-radius:8px;
+      background:linear-gradient(135deg,#0b66f6 0%,#2aa8ff 100%);
+      display:inline-flex;align-items:center;justify-content:center;
+      color:#fff;font-weight:700;font-size:18px
+    }
+    .brand-title{font-size:18px;font-weight:600;color:var(--text)}
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:0 8px 28px rgba(15,23,42,0.06);
+      padding:28px;
+    }
+    h1{margin:0 0 10px;font-size:20px;}
+    p.lead{margin:0 0 18px;color:var(--muted);line-height:1.5;}
+    .cta-wrap{margin-top:18px}
+    .btn{
+      display:inline-block;
+      padding:12px 20px;
+      background:var(--accent);     /* solid background */
+      color:#ffffff;                /* white text */
+      text-decoration:none;
+      border-radius:10px;
+      font-weight:600;
+      box-shadow:0 6px 18px rgba(11,102,246,0.18);
+      border: none;                 /* ensure no border shows */
+    }
+    .secondary{
+      display:inline-block;margin-left:12px;color:var(--accent);
+      text-decoration:none;font-weight:600
+    }
+    .note{margin-top:18px;color:var(--muted);font-size:13px;line-height:1.4}
+    .footer{
+      margin-top:22px;padding-top:18px;border-top:1px solid #eef2f6;
+      color:var(--muted);font-size:13px;display:flex;
+      justify-content:space-between;flex-wrap:wrap;gap:12px
+    }
+    .small{font-size:12px;color:#98a0a6}
+    @media (max-width:420px){
+      .card{padding:20px}
+      .brand-title{font-size:16px}
+      .btn{width:100%;text-align:center}
+      .secondary{display:block;margin-left:0;margin-top:10px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="container">
+      <!-- Card -->
+      <div class="card">
+        <h1>Hi {{ user.first_name|default:"there" }}, welcome!</h1>
+        <p class="lead">
+          Thanks for creating an account. Please verify your email to activate your access and complete your setup.
+        </p>
+
+        <!-- Buttons -->
+        <div class="cta-wrap">
+          <a href="{{ activation_link }}" class="btn" target="_blank" rel="noopener" aria-label="Verify my email">Verify my email</a>
+        
+        </div>
+
+        <!-- Info -->
+        <p class="note">
+          This verification link will expire in 24 hours.  
+          If the button doesn’t work, copy and paste the link below into your browser:
+        </p>
+
+        <p class="small">
+          <a href="{{ activation_link }}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">
+            {{ activation_link }}
+          </a>
+        </p>
+
+        <!-- Footer -->
+        <div class="footer">
+          <div>Need help?  
+            <a href="mailto:support@example.com" style="color:var(--accent);text-decoration:none">
+              support@example.com
+            </a>
+          </div>
+          <div class="small">
+            If you did not create this account, you can safely ignore this email.
+          </div>
+        </div>
+      </div>
+
+      <p style="text-align:center;margin-top:18px;color:var(--muted);font-size:13px">
+        Regards — The Team
+      </p>
+
+    </div>
+  </div>
+</body>
+</html>
