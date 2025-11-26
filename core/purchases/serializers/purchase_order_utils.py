@@ -45,7 +45,7 @@ def approver_from_embedded(data):
     return User.objects.filter(id=approver_id).first()
 
 
-# --- REPLACED: improved helpers to list/group approvers from embedded approvals data ---
+# --- improved helpers to list/group approvers from embedded approvals data ---
 
 
 def _get_embedded_approvals(data):
@@ -71,7 +71,6 @@ def approvers_from_embedded(data):
     items = []
     ids = set()
     for a in raw:
-        # normalize possible keys
         approver_raw = a.get("approver_id") or a.get("approver") or a.get("user_id")
         try:
             approver_id = int(approver_raw) if approver_raw is not None else None
@@ -105,7 +104,6 @@ def approver_approvals_map(data):
     m = {}
     for it in items:
         m.setdefault(it["approver_id"], []).append(it)
-    # optional: sort each approver's list by created_at (descending) for readability
     for k, lst in m.items():
         lst.sort(key=lambda x: x.get("created_at") or "", reverse=True)
     return m
