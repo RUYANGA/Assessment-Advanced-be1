@@ -29,7 +29,9 @@ def approver_from_embedded(data):
 
     # prefer level 2 approved
     by_level2 = [
-        a for a in approvals if a.get("level") == 2 and a.get("decision") == "APPROVED"
+        a
+        for a in approvals
+        if a.get("level") == 2 and a.get("decision") == "APPROVED"
     ]
     cand = by_level2[0] if by_level2 else None
     if not cand:
@@ -45,7 +47,7 @@ def approver_from_embedded(data):
     return User.objects.filter(id=approver_id).first()
 
 
-# --- improved helpers to list/group approvers from embedded approvals data ---
+# --- improved helpers for parsing embedded approvals ---
 
 
 def _get_embedded_approvals(data):
