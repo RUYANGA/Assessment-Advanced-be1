@@ -144,46 +144,6 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ github.sha }}
 
-  # deploy:
-  #   name: Deploy to remote host
-  #   runs-on: ubuntu-latest
-  #   needs: build-and-push
-  #   if: github.ref == 'refs/heads/main'
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-
-  #     - name: Install SSH client
-  #       run: sudo apt-get update && sudo apt-get install -y openssh-client rsync
-
-  #     - name: Add SSH key
-  #       uses: webfactory/ssh-agent@v0.8.1
-  #       with:
-  #         ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
-
-  #     - name: Deploy via SSH (pull image & restart)
-  #       env:
-  #         DOCKERHUB_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
-  #       run: |
-  #         ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} <<'SSH'
-  #           set -e
-  #           # login to docker hub (use token as password)
-  #           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-  #           docker pull "${DOCKERHUB_IMAGE}"
-  #           # Example with docker-compose - ensure compose file on server references the same image tag
-  #           if command -v docker-compose >/dev/null 2>&1; then
-  #             docker-compose pull && docker-compose up -d --remove-orphans
-  #           else
-  #             # fallback: stop existing container, run new one (customize as needed)
-  #             docker stop web || true
-  #             docker rm web || true
-  #             docker run -d --name web \
-  #               -p 8000:8000 \
-  #               --env-file /home/${{ secrets.SERVER_USER }}/.env \
-  #               "${DOCKERHUB_IMAGE}"
-  #           fi
-  #         SSH
-
 permissions:
   contents: read
   id-token: write
